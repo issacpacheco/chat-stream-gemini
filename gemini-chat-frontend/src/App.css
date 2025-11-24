@@ -39,15 +39,21 @@
     to { background-position: 100% 100%; }
 }
 
+@keyframes bubble-float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
 
 /* --- 1. CONFIGURACIÓN GLOBAL Y TAMAÑO --- */
 :root {
     /* Colores Gengar/Fantasma */
-    --color-primary: #8A2BE2; /* Morado intenso (similar a Gengar) - Acento Principal */
-    --color-secondary: #f6f6f6; /* Rojo/Fucsia brillante (ojos de Gengar) - Acento Secundario */
-    --color-bg-dark: #1A0033; /* Morado muy oscuro, casi negro */
+    --color-primary: #8A2BE2; /* Morado intenso (Gengar) - Acento Principal */
+    --color-secondary: #ffffff; /* Rojo/Fucsia brillante (Ojos) - Acento Secundario */
+    --color-bg-dark: #120022; /* Morado muy oscuro, casi negro */
     --color-surface-dark: #2F004F; /* Morado oscuro para la superficie del chat */
-    --color-text-light: #f0f0f0; /* Blanco suave */
+    --color-text-light: #f0f0f0; 
     --color-oak-bubble: #E0BBE4; /* Morado claro para burbujas de "Gengar" */
     --color-success: #78C850; 
     --color-error: #FF4500; 
@@ -75,7 +81,7 @@ body {
     font-family: var(--font-secondary); 
     
     /* FONDO DINÁMICO GENGAR */
-    background: linear-gradient(-45deg, var(--color-bg-dark), #330066, #1A0033); /* Gradiente morado oscuro */
+    background: linear-gradient(-45deg, var(--color-bg-dark), #330066, #1A0033); 
     background-size: 400% 400%;
     animation: background-pan 30s ease infinite;
 }
@@ -86,18 +92,18 @@ body {
     height: 90vh; 
     width: 100%;
     max-width: 850px; /* Ancho máximo para centrar */
-    margin: 50px; 
+    margin: 50px; /* Centrado por el body flex */
     
-    border-radius: 20px; /* Más redondeado para un look "fantasmal" */
-    background-color: rgba(30, 0, 50, 0.9); /* Morado oscuro semitransparente */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); /* Sombra más profunda */
+    border-radius: 20px; 
+    background-color: rgba(30, 0, 50, 0.9); 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); 
     
     display: flex;
     flex-direction: column; 
-    padding: 25px; /* Padding interno */
-    gap: 20px; /* Más espacio entre elementos */
+    padding: 25px; 
+    gap: 20px; 
     
-    border: 2px solid var(--color-primary); /* Borde morado oscuro */
+    border: 2px solid var(--color-primary); 
     box-sizing: border-box; 
 }
 
@@ -106,7 +112,7 @@ body {
     display: flex;
     justify-content: space-between; 
     align-items: center;
-    border-bottom: 4px solid var(--color-primary); /* Borde más grueso y morado */
+    border-bottom: 4px solid var(--color-primary); 
     padding-bottom: 12px;
     margin-bottom: 0; 
     flex-shrink: 0; 
@@ -114,7 +120,7 @@ body {
 
 /* Clase .title aplicada a h1 */
 .title {
-    color: var(--color-secondary); /* Rojo/Fucsia brillante para el texto */
+    color: var(--color-secondary); 
     font-size: 3rem; 
     margin: 0;
     font-family: var(--font-primary);
@@ -124,24 +130,24 @@ body {
     
     /* EFECTO PIXELADO 3D/CONTRONO sobre la LETRA */
     text-shadow: 
-        -3px -3px 0 var(--color-primary), /* Borde morado más grueso */
+        -3px -3px 0 var(--color-primary), 
         3px -3px 0 var(--color-primary),  
         -3px 3px 0 var(--color-primary),   
         3px 3px 0 var(--color-primary),    
-        0 0 20px rgba(255, 20, 147, 0.9); /* Brillo intenso fucsia */
+        0 0 20px rgba(255, 20, 147, 0.9); 
     
     /* Aplicar solo la animación de movimiento sutil */
     animation: 
         pixel-scroll 2s ease-in-out infinite alternate; 
     
-    /* display: inline-block;  */
+    display: inline-block; 
 }
 
 
 .clear-button {
     padding: 12px 25px;
-    background-color: var(--color-secondary); /* Botón Rojo/Fucsia */
-    color: var(--color-bg-dark); /* Texto oscuro */
+    background-color: var(--color-secondary); 
+    color: var(--color-bg-dark); 
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -194,9 +200,9 @@ body {
 .chat-window {
     flex-grow: 1; 
     min-height: 0; 
-    overflow-y: auto;
+    overflow-y: auto; /* Correcto para scrolling vertical */
     padding: 25px;
-    background-color: var(--color-surface-dark); /* Morado oscuro base */
+    background-color: var(--color-surface-dark); 
     
     border: 2px solid var(--color-primary); 
     border-radius: 15px; 
@@ -208,7 +214,7 @@ body {
     
     /* --- Posicionamiento para Pseudoelementos --- */
     position: relative; 
-    overflow: hidden; /* Asegura que los fantasmas de fondo no salgan */
+    /* ELIMINADA: overflow: hidden; <--- ESTO CAUSABA EL PROBLEMA */
 
     /* Añadir el patrón de fondo Gengar/Fantasma (simulación SVG) */
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238A2BE2' fill-opacity='0.1'%3E%3Cpath d='M36 34c0-2.3-1.9-4.2-4.2-4.2s-4.2 1.9-4.2 4.2 1.9 4.2 4.2 4.2 4.2-1.9 4.2-4.2zm6 11c0 2.3 1.9 4.2 4.2 4.2s4.2-1.9 4.2-4.2-1.9-4.2-4.2-4.2-4.2 1.9-4.2 4.2zM28 20c0-2.3-1.9-4.2-4.2-4.2s-4.2 1.9-4.2 4.2 1.9 4.2 4.2 4.2 4.2-1.9 4.2-4.2zm6 11c0 2.3 1.9 4.2 4.2 4.2s4.2-1.9 4.2-4.2-1.9-4.2-4.2-4.2-4.2 1.9-4.2 4.2z'/%3E%3C/g%3E%3C/svg%3E");
@@ -225,15 +231,15 @@ body {
     top: 10px;
     left: 10px;
     right: 10px;
-    height: 1px; /* La altura de la línea */
+    height: 1px; 
     /* Crea una línea de puntos gruesos con un dash-array */
     background-image: linear-gradient(to right, var(--color-secondary) 50%, rgba(255, 20, 147, 0) 50%);
-    background-size: 20px 1px; /* Longitud del punto y el espacio */
+    background-size: 20px 1px; 
     opacity: 0.3;
-    z-index: 5; /* Por debajo de las burbujas */
+    z-index: 5; 
 }
 
-/* Estilos de burbujas (maestro-pokemon y Profesor Oak/Gengar) */
+/* Estilos de burbujas (User y Profesor Oak/Gengar) */
 .message-row {
     display: flex;
     margin-bottom: 20px; 
@@ -250,7 +256,7 @@ body {
 
 .message-bubble {
     padding: 16px 25px; 
-    border-radius: 25px; /* Muy redondeado, casi forma de nube */
+    border-radius: 25px; 
     max-width: 75%; 
     line-height: 1.6;
     word-wrap: break-word;
@@ -260,7 +266,7 @@ body {
     /* Efecto "fantasma" flotante */
     transform: translateY(0); 
     animation: bubble-float 4s ease-in-out infinite alternate;
-    z-index: 10; /* Asegura que la burbuja esté por encima de la línea guía */
+    z-index: 10; 
 }
 
 @keyframes bubble-float {
@@ -284,7 +290,7 @@ body {
     color: var(--color-bg-dark); /* Texto oscuro */
     border-left: 8px solid var(--color-secondary); /* Borde fucsia más grueso */
     border-radius: 10px 25px 25px 25px; 
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 20, 147, 0.5); /* Sombra de brillo fucsia */
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 20, 147, 0.5); 
 }
 
 /* Ajuste para el texto en las burbujas */
@@ -295,7 +301,7 @@ body {
 
 .typing-indicator {
     font-style: italic;
-    color: var(--color-secondary); /* Fucsia para el indicador */
+    color: var(--color-secondary); 
     background-color: var(--color-oak-bubble);
     border-left: 8px solid var(--color-secondary);
     z-index: 10;
@@ -311,7 +317,7 @@ body {
 
 .message-bubble strong {
     font-weight: 900 !important;
-    color: var(---color-text-light); /* Morado intenso */
+    color: var(--color-primary); 
 }
 
 .message-bubble ul,
@@ -322,8 +328,8 @@ body {
 }
 
 .message-bubble code {
-    background-color: #3C0066; /* Morado oscuro para código inline */
-    color: var(--color-secondary); /* Texto fucsia para código inline */
+    background-color: #3C0066; 
+    color: var(--color-secondary); 
     padding: 3px 6px;
     border-radius: 4px;
     font-size: 0.95em;
@@ -331,11 +337,11 @@ body {
 }
 
 .message-bubble pre {
-    background-color: #260040; /* Morado aún más oscuro para bloques de código */
+    background-color: #260040; 
     padding: 20px; 
     border-radius: 8px;
     overflow-x: auto;
-    color: var(--color-success); /* Verde para la sintaxis */
+    color: var(--color-success); 
     border: 1px solid var(--color-primary); 
 }
 

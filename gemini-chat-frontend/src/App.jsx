@@ -9,12 +9,17 @@ const FASTAPI_BASE_URL = "ws://localhost:8000/ws/chat/";
 const REST_API_URL = "http://localhost:8000/api/sessions/";
 
 function ChatApp() {
-    const [messages, setMessages] = useState([]);
+    // Generar un ID de cliente único al cargar por primera vez
+    const [clientId, setClientId] = useState(`client-${Date.now()}`);
+    
+    // Mensaje de bienvenida del Profesor Oak para iniciar la sesión
+    const [messages, setMessages] = useState([
+        { sender: 'Profesor Oak', text: '¡Bienvenido al Laboratorio Pokémon! Soy el Profesor Oak. Pregúntame sobre cualquier Pokémon, sus características, debilidades o su historia. ¡Estoy aquí para ayudarte a completar tu Pokédex! 📚' }
+    ]);
+
     const [input, setInput] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
-    // Generar un ID de cliente único al cargar por primera vez
-    const [clientId, setClientId] = useState(`client-${Date.now()}`);
 
     const ws = useRef(null);
     const chatEndRef = useRef(null);
@@ -46,10 +51,14 @@ function ChatApp() {
                 if (data.type === "start") {
                     setIsTyping(true);
                     // Inicia un nuevo mensaje vacío para el nuevo stream
-                    return [...prevMessages, { sender: 'Profesor Oak', text: '' }];
+                    // Usamos 'Profesor Oak' como remitente para el stream de Gemini
+                    if (!lastMessage || lastMessage.sender !== 'Profesor Oak' || lastMessage.text !== '') {
+                        return [...prevMessages, { sender: 'Profesor Oak', text: '' }];
+                    }
+                    return prevMessages;
 
                 } else if (data.type === "chunk" && data.content) {
-                    // Si el último mensaje es de Gemini, agrega el fragmento
+                    // Si el último mensaje es de Gemini (Profesor Oak), agrega el fragmento
                     if (lastMessage && lastMessage.sender === 'Profesor Oak') {
                         // Creamos una copia inmutable del mensaje anterior para actualizar
                         newMessages[lastMessageIndex] = {
@@ -82,7 +91,7 @@ function ChatApp() {
         ws.current.onerror = (error) => {
             console.error('Error de WebSocket:', error);
             setIsConnected(false);
-            ws.current.close();
+            // Evitamos llamar a ws.current.close() aquí, ya que onclose manejará la reconexión
         };
     };
 
@@ -109,10 +118,12 @@ function ChatApp() {
         const textToSend = input.trim();
         if (textToSend === '' || !isConnected || isTyping) return;
 
-        const userMessage = { sender: 'Maestro pokémon', text: textToSend };
+        // El usuario es 'Tú'
+        const userMessage = { sender: 'Tú', text: textToSend };
         setMessages(prev => [...prev, userMessage]);
 
         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            // Se envía el texto plano al backend
             ws.current.send(textToSend);
         }
 
@@ -127,17 +138,19 @@ function ChatApp() {
             });
 
             if (response.ok) {
-                setMessages([]);
-
+                // Generar un nuevo client ID para forzar la reconexión y nueva sesión de chat en el backend
+                const newClientId = `client-${Date.now()}`;
+                
                 if (ws.current) {
                     ws.current.close();
                 }
 
-                // Generar un nuevo client ID para la nueva sesión de chat
-                setClientId(`client-${Date.now()}`);
-
-                setMessages([{ sender: 'System', text: 'Historial borrado. Iniciando nueva sesión...' }]);
-
+                setClientId(newClientId);
+                setMessages([]);
+                
+                // Mensaje de bienvenida del Profesor Oak después de limpiar
+                setMessages([{ sender: 'Profesor Oak', text: '¡Historial de la Pokédex borrado! Comencemos de nuevo. Pregúntame sobre cualquier Pokémon. 🌿' }]);
+                
             } else {
                 console.error("Error al borrar historial en el backend.");
                 setMessages(prev => [...prev, { sender: 'System', text: 'Error al borrar historial.' }]);
@@ -171,7 +184,8 @@ function ChatApp() {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`message-row ${msg.sender === 'Maestro pokémon' ? 'maestro-pokemon' : 'profesor-oak'}`}
+                        // Usamos 'maestro-pokemon' para el usuario y 'profesor-oak' para el asistente
+                        className={`message-row ${msg.sender === 'Tú' ? 'maestro-pokemon' : 'profesor-oak'}`}
                     >
                         <div className="message-bubble">
                             <strong>{msg.sender}:</strong>
@@ -186,9 +200,9 @@ function ChatApp() {
                 ))}
                 {/* Indicador de que Gemini está escribiendo */}
                 {isTyping && (
-                    <div className="message-row gemini">
+                    <div className="message-row profesor-oak">
                         <div className="message-bubble typing-indicator">
-                            ... Gemini está escribiendo
+                            ... Profesor Oak está consultando la Pokédex
                         </div>
                     </div>
                 )}
