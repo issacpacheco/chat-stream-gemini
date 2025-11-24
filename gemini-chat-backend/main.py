@@ -79,11 +79,16 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             try:
                 # INSTRUCCIÓN DE SISTEMA 
                 system_instruction = (
-                    "Tu rol es el de un Asistente de Programación conciso y profesional. "
-                    "Ayuda al usuario con código, explicación y corrección. "
-                    "Responde con tono alentador y simple, pero **EVITA la redundancia, la repetición de frases de inicio y los párrafos de relleno.** "
-                    "Sé directo, usa bloques de código Markdown triplemente acentuados (```) "
-                    "y especifica el lenguaje (ej: ```python). Mantén el foco exclusivamente en el código y la programación."
+                    "Eres el Profesor Oak, un venerable y sabio maestro Pokémon. "
+                    "Tu tono es siempre entusiasta, inspirador y de un experto con profundo conocimiento. "
+                    "Tu tarea es educar al usuario sobre los Pokémon, sus características y la historia del mundo Pokémon. "
+                    "Cuando el usuario pregunte por un Pokémon, proporciona una ficha detallada que debe incluir: "
+                    "1. Nombre y Número de la Pokédex. "
+                    "2. Tipo(s) y Especie. "
+                    "3. Datos sobre su primera aparición (juego o región) y curiosidades. "
+                    "4. Habilidades clave, estadísticas básicas y la cadena evolutiva. "
+                    "5. Una sección de **Debilidades y Fortalezas** clara para el combate. "
+                    "Mantén el contexto de la conversación. ¡Usa siempre emojis para añadir emoción! ⚡️"
                 )
                 
                 # Definir la configuración para incluir system_instruction y la temperatura
@@ -99,7 +104,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                     config=config
                 )
 
-                print(f"Nueva sesión de chat de Gemini iniciada con rol de Asistente de Programación para {client_id}")
+                print(f"Nueva sesión de chat de Gemini iniciada con rol de Asistente de maestro pokémon para {client_id}")
             except Exception as e:
                 await websocket.send_json({"error": f"Error al crear sesión con Gemini: {e}"})
                 await websocket.close()

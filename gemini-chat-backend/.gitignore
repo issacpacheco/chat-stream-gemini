@@ -1,0 +1,16 @@
+Ignorar archivos de entorno que contienen claves secretas y credenciales
+
+.env
+
+Directorios de compilación/dependencias (comunes en proyectos Python y Node.js)
+
+pycache/
+.pytest_cache/
+venv/
+node_modules/
+dist/
+build/
+
+Archivos de caché y logs
+
+*.log.DS_Store
