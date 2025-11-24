@@ -92,6 +92,13 @@ Limpieza de Sesión: El botón "Limpiar Historial" utiliza un endpoint REST (DEL
 
 Diagnóstico: Incluye un print en el backend (main.py) para diagnosticar la respuesta completa de Gemini antes de enviarla.
 
+# Resultado
+![Vista previa de la aplicación](src/img/captura_ipokedex.png)
+_Vista previa de la interfaz de usuario (frontend)._
+
+![Streaming de respuestas](src/img/captura_descripcion_gengar.png)
+_Demostración del streaming de respuestas fragmentadas desde Gemini._
+
 # 🛠️ Contribución
 Siéntete libre de clonar este repositorio, explorar el código y proponer mejoras. Puedes contribuir con:
 

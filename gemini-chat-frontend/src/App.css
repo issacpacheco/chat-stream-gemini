@@ -317,7 +317,7 @@ body {
 
 .message-bubble strong {
     font-weight: 900 !important;
-    color: var(--color-primary); 
+    color: var(--color-secondary); 
 }
 
 .message-bubble ul,
